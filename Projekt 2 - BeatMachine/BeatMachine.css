@@ -1,0 +1,52 @@
+html {
+    font-size: 5px;
+    background-color: black;
+  }
+  body,html {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    overflow-y:hidden; 
+    width: 99%; 
+    height: 100%;
+  }
+
+  .column {
+    float: left;
+    height: 100%;
+  }
+
+.center, .right, .left { 
+    width: 33%;
+    margin: auto;
+    text-align: center;
+}
+  
+  .sound {
+    font-size: 2.0rem;
+    letter-spacing: .1rem;
+    color: grey;
+  }
+  .keys {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+    .key {
+    margin: 1rem;
+    font-size: 1.0rem;
+    padding: 3rem .3rem;
+    width: 10rem;
+    text-align: center;
+    color: grey;
+    font-size: center;
+    
+   
+  }
+  
+  kbd {
+    
+    margin: 2rem;
+    font-size: 10rem;
+}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+</head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Find me google</title>
+<body>
+<head>
+    <style>
+#map {
+    width: 100%;
+    height: 700px;
+    background-color: grey;
+}
+</style>
+</head>
+<body>
+    <h3>Find me google</h3>
+    <div id="map"></div>
+    <script>
+    var map, marker 
+    var Img = 'Pict.png'
+
+    function initMap() {
+    var latarnia = {lat:14.904217, lng:-23.5055968};
+     map = new google.maps.Map(document.getElementById('map'), {
+        center: latarnia,
+        zoom:5,
+//przesuwanie mapy klawiszami wylączone
+        keyboardShortcuts: false 
+    }); 
+
+        locate();
+
+        marker = new google.maps.Marker({
+        position: latarnia,
+        map :map,
+        draggable: true,
+        icon:Img,
+
+// aniamacja zdjęcie spada
+        animation: google.maps.Animation.DROP,
+    });
+
+// animacja zdjęcie skacze po kliknięciu
+         marker.addListener('click', toggleBounce)
+    }
+    function toggleBounce() {
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+    }
+
+//pobieranie aktualnej lokalizacji 
+    function locate(){ 
+         navigator.geolocation.getCurrentPosition(geoOk, geoFail) 
+    }
+
+//zgoda na lokalizacje
+    function geoOk(p){
+        console.log(p)
+        var myLng =p.coords.longitude;
+        var myLat =p.coords.latitude;
+        marker.setPosition({ lng: myLng, lat:myLat})
+        map.setCenter({lng: myLng, lat: myLat})
+        map.setZoom(14)
+      
+//obsługa klawiszy do przesuwania awatara
+        document.addEventListener("keydown",function(key)
+     {
+if(event.key=="ArrowUp")
+{
+    myLat=myLat+0.001
+}
+if(event.key=="ArrowDown")
+{
+    myLat=myLat-0.001
+}
+if(event.key=="ArrowLeft")
+{
+    myLng=myLng-0.001
+}
+if(event.key=="ArrowRight")
+{
+    myLng=myLng+0.001
+}
+    marker.setPosition({lng: myLng, lat: myLat})
+    })
+    }
+//brak zgody na lokalozację
+    function geoFail(err)
+    {
+        alert("Błąd. Lokalizacja urządzenia wyłączona.")
+    }
+//załadowanie mapy z kluczem API.
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrN4NmKr8Sp6msbkM_4wAAofbUqvxkpeg&callback=initMap"
+  type="text/javascript"></script>
+</body>
+</html>

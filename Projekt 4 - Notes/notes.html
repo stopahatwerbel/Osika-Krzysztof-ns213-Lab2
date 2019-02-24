@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Notes</title>
+		
+		<link rel="stylesheet" href="style.css"/>		
+		<script src="jquery-1.4.4.min.js"></script>
+		<script type="text/javascript">
+var notes, count = 0;
+
+// zapamietaj notatke
+function saveNotes() {
+    var notesArray = [];
+
+// dla każdej notatki dodaj obiekt w tablicy
+    notes.find("li > div").each(function (i, e) {
+// zapamietaj atrybuty klasy oraz tekst notatki
+        var colourClass = $(e).attr("class");
+        var title = $(e).find("textarea.note-title");
+        var content = $(e).find("textarea.note-content");
+
+        notesArray.push({ Index: i, Title: title.val(), Content: content.val(), Class: colourClass });
+    });
+
+// wykorzystany json do zakodowania i zapisu strina do pamieci
+    var jsonStr = JSON.stringify(notesArray);
+    localStorage.setItem("notes", jsonStr);
+}
+// animacja guzika usuniecia notatki
+function addNoteEvent(noteElement) {
+    var div = noteElement.children("div");
+    var closeImg = div.find("img");
+
+    div.hover(function () {
+        closeImg.removeClass("hide");
+    }, function () {
+        closeImg.addClass("hide");
+        saveNotes();
+    });
+}
+			
+//  dodaj nowa notatke
+function addNewNote(className, title, content) {
+// losuj kolor
+	if (!className) {
+		className = "colour" + Math.ceil(Math.random() * 3);
+	}
+				
+// dodaje nowa notatke na koniec
+	notes.append("<li><div class='" + className + "'>" + 
+					"<textarea class='note-title' placeholder='Tytuł' maxlength='10'/>" + 
+					"<textarea class='note-content' placeholder='Treść'/>" + 
+					"<img class='hide' src='images/close.png'/>" + 
+					"</div></li>");
+		
+// dodaje obsluge guzika usuwania
+	var newNote = notes.find("li:last");
+	newNote.find("img").click(function () {
+// usuwa notatke
+	    newNote.remove();   
+	});
+				
+	addNoteEvent(newNote);
+
+}
+
+// zaladuj notatki z pamieci lokalnej
+function loadNotes() {
+    var storedNotes = localStorage.getItem("notes");
+    if (storedNotes) {
+// zaladuj do tablicy string z jsona
+        var notesArray = JSON.parse(storedNotes);
+        count = notesArray.length;
+
+        var i;
+        for (i = 0; i < count; i++) {
+            var storedNote = notesArray[i];
+            addNewNote(storedNote.Class, storedNote.Title, storedNote.Content);
+        }
+    }
+}
+
+$(document).ready(function () {
+// szukaj odniesien na liscie notatek
+    notes = $("#notes");
+
+// wgraj notatki jesli istnieja w pamieci
+    loadNotes();
+
+// klikniecie guzika nowej notatki doaje notatke
+    $("#btnNew").click(function () {
+        addNewNote();
+    });
+});
+		</script>
+		
+		
+	</head>
+	
+	<body>
+		<div id="controls">
+			<img id="btnNew" src="images/newnote.png"/>
+		</div>
+		
+		<ul id="notes"/>        
+	</body>
+</html>
